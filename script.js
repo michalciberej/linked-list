@@ -1,6 +1,5 @@
 class Node {
   constructor(value=null, previous=null, next=null) {
-    this.previous = previous;
     this.value = value;
     this.next = next
   }
@@ -67,7 +66,12 @@ class LinkedList {
 
   pop() {
     let temp = this.head
-    while (temp.next != null) temp = temp.next
+    let prev = null
+    while (temp.next != null) {
+      prev = temp
+      temp = temp.next
+    }
+    prev.next = null
   }
 
   contains(value) {
@@ -79,6 +83,56 @@ class LinkedList {
       return false
     else
       return true
+  }
+
+  find(value) {
+    let temp = this.head
+    let num = 0
+    while (temp.next != null && temp.value != value) {
+      temp = temp.next
+      num++
+    }
+    if (temp.value != value) return null
+    else return num
+  }
+
+  toString() {
+    let temp = this.head
+    let string = 'head => ' 
+    while (temp.next != null) {
+      string += `( ${temp.value} ) => `
+      temp = temp.next
+    }
+    return string += `( ${temp.value} ) => null`
+  }
+
+  insertAt(value, index) {
+    let temp = this.head
+    let prev = this.head
+    let num = 0
+    let newNode = new Node(value)
+    while (num < index && temp.next != null) {
+      prev = temp
+      temp = temp.next
+      num++
+    }
+    prev.next = newNode
+    newNode.next = temp
+  }
+
+  removeAt(index) {
+    let temp = this.head
+    let prev = this.head
+    let num = 0
+    if (this.head === null) return
+    if (index === 0) this.head = this.head.next
+    while (num < index && temp.next != null) {
+      prev = temp
+      temp = temp.next
+      num++
+    }
+    if ( num !== index ) return 
+    prev.next = temp.next
   }
 
 }
@@ -97,6 +151,13 @@ console.log(list)
 console.log(list.size())
 console.log(list.displayHead())
 console.log(list.tail())
-console.log(list.at(5))
-console.log(list.pop())
+console.log(list.at(3))
 console.log(list.contains(5))
+list.pop()
+console.log(list.find('5'))
+console.log(list)
+console.log(list.toString())
+list.insertAt('hello', 1)
+console.log(list.toString())
+list.removeAt(1)
+console.log(list.toString())
